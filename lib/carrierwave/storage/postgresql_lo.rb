@@ -30,6 +30,7 @@ module CarrierWave
         end
 
         def delete
+          connection.lo_unlink(identifier)
         end
 
         def content_type

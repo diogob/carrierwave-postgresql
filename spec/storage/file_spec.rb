@@ -6,6 +6,13 @@ describe CarrierWave::Storage::PostgresqlLo::File do
   let(:file){ CarrierWave::Storage::PostgresqlLo::File.new(uploader) }
   let(:tempfile){ stub_tempfile('test.jpg', 'application/xml') }
 
+  describe "#delete" do
+    before do
+      file.connection.should_receive(:lo_unlink).with(0)
+    end
+    it("should delete the file using the lo interface"){ file.delete }
+  end
+
   describe "#url" do
     subject{ file.url }
     it{ should == "/test_file/0" }
