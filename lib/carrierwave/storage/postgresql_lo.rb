@@ -3,8 +3,6 @@ module CarrierWave
   module Storage
     class PostgresqlLo < Abstract
       class File
-        attr_reader :path
-
         def initialize(uploader)
           @uploader = uploader
         end
@@ -62,11 +60,12 @@ module CarrierWave
         raise "This uploader must be mounted in an ActiveRecord model to work" unless uploader.model
         stored = CarrierWave::Storage::PostgresqlLo::File.new(uploader)
         stored.write(file)
-        @oid = stored.identifier
         stored
       end
 
       def retrieve!(identifier)
+        raise "This uploader must be mounted in an ActiveRecord model to work" unless uploader.model
+        CarrierWave::Storage::PostgresqlLo::File.new(uploader)
       end
 
       def identifier
