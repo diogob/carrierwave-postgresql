@@ -14,7 +14,7 @@ module CarrierWave
 
         def read
           @uploader.model.transaction do
-            lo = connection.lo_open(oid)
+            lo = connection.lo_open(identifier)
             content = connection.lo_read(lo, file_length)
             connection.lo_close(lo)
             content
@@ -24,7 +24,7 @@ module CarrierWave
         def write(file)
           @uploader.model.transaction do
             @oid = connection.lo_creat
-            lo = connection.lo_open(oid, ::PG::INV_WRITE)
+            lo = connection.lo_open(identifier, ::PG::INV_WRITE)
             size = connection.lo_write(lo, file.read)
             connection.lo_close(lo)
             size
@@ -38,10 +38,12 @@ module CarrierWave
         end
 
         def file_length
-          lo = connection.lo_open(oid)
-          size = connection.lo_lseek(lo, 0, 2)
-          connection.lo_close(lo)
-          size
+          @uploader.model.transaction do
+            lo = connection.lo_open(identifier)
+            size = connection.lo_lseek(lo, 0, 2)
+            connection.lo_close(lo)
+            size
+          end
         end
 
         alias :size :file_length
@@ -50,7 +52,7 @@ module CarrierWave
           @connection ||= @uploader.model.connection.raw_connection
         end
 
-        def oid
+        def identifier
           @oid ||= @uploader.identifier
         end
 
@@ -60,10 +62,15 @@ module CarrierWave
         raise "This uploader must be mounted in an ActiveRecord model to work" unless @uploader.model
         stored = CarrierWave::Storage::PostgresqlLo::File.new(uploader)
         stored.write(file)
+        @oid = stored.identifier
         stored
       end
 
       def retrieve!(identifier)
+      end
+
+      def identifier
+        @oid
       end
     end
   end

@@ -14,9 +14,6 @@ describe CarrierWave::Storage::PostgresqlLo do
     context "when we have it mounted" do
       let(:uploader){ mock('an uploader', :model => test_model, :identifier => 0) }
       let(:lo){ storage.store!(file) }
-      before do
-        uploader.stub(:identifier).and_return(lo.oid)
-      end
       subject{ lo }
       its(:read){ should == "this is stuff" }
     end
