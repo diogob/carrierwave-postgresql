@@ -2,15 +2,16 @@ require 'spec_helper'
 
 describe CarrierWave::Storage::PostgresqlLo::File do
   let(:test_model){ Test.new }
-  let(:uploader){ mock('an uploader', :model => test_model) }
-  let(:file){ CarrierWave::Storage::PostgresqlLo::File.new(uploader, 0) }
+  let(:uploader){ mock('an uploader', :model => test_model, :identifier => 0) }
+  let(:file){ CarrierWave::Storage::PostgresqlLo::File.new(uploader) }
   let(:tempfile){ stub_tempfile('test.jpg', 'application/xml') }
 
   describe "#write" do
     before do
-      file.connection.should_receive(:lo_open).with(0).and_return(1)
-      file.connection.should_receive(:lo_close).with(1)
-      file.connection.should_receive(:lo_write).with(1, "this is stuff").and_return(42)
+      file.connection.should_receive(:lo_creat).and_return(1)
+      file.connection.should_receive(:lo_open).with(1, ::PG::INV_WRITE).and_return(2)
+      file.connection.should_receive(:lo_close).with(2)
+      file.connection.should_receive(:lo_write).with(2, "this is stuff").and_return(42)
     end
     it("should write the file using the lo interface"){ file.write(tempfile).should == 42 }
   end
