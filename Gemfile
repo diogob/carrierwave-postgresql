@@ -8,6 +8,8 @@ source "http://rubygems.org"
 gem 'carrierwave', "~> 0.6.2"
 
 group :development do
+  gem "activerecord", "~> 3.2.8"
+  gem "pg"
   gem "rspec", "~> 2.11.0"
   gem "rdoc", "~> 3.12"
   gem "bundler", "~> 1.2.1"
