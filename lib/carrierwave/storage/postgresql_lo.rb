@@ -23,7 +23,6 @@ module CarrierWave
 
         def write(file)
           @uploader.model.transaction do
-            @oid = connection.lo_creat
             lo = connection.lo_open(identifier, ::PG::INV_WRITE)
             size = connection.lo_write(lo, file.read)
             connection.lo_close(lo)
@@ -59,7 +58,7 @@ module CarrierWave
       end
 
       def store!(file)
-        raise "This uploader must be mounted in an ActiveRecord model to work" unless @uploader.model
+        raise "This uploader must be mounted in an ActiveRecord model to work" unless uploader.model
         stored = CarrierWave::Storage::PostgresqlLo::File.new(uploader)
         stored.write(file)
         @oid = stored.identifier
@@ -70,7 +69,11 @@ module CarrierWave
       end
 
       def identifier
-        @oid
+        @oid ||= uploader.model.read_attribute(uploader.mounted_as) || connection.lo_creat
+      end
+
+      def connection
+        @connection ||= uploader.model.connection.raw_connection
       end
     end
   end

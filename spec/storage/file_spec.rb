@@ -8,8 +8,7 @@ describe CarrierWave::Storage::PostgresqlLo::File do
 
   describe "#write" do
     before do
-      file.connection.should_receive(:lo_creat).and_return(1)
-      file.connection.should_receive(:lo_open).with(1, ::PG::INV_WRITE).and_return(2)
+      file.connection.should_receive(:lo_open).with(0, ::PG::INV_WRITE).and_return(2)
       file.connection.should_receive(:lo_close).with(2)
       file.connection.should_receive(:lo_write).with(2, "this is stuff").and_return(42)
     end
