@@ -1,6 +1,4 @@
 # encoding: utf-8
-require 'pg'
-
 module CarrierWave
   module Storage
     class PostgresqlLo < Abstract
