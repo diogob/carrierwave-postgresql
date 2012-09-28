@@ -50,6 +50,8 @@ Add an oid column to the model you want to mount the uploader on:
 add_column :users, :avatar, :oid
 ```
 
+*IMPORTANT:* The table contains only an oid, which is a number referencing the large object. The file content is stored in a separate table. This is nice because it does not genrate any problem with SELECT * statements and it gives us a nice file-like interface to the large object.
+
 Open your model file and mount the uploader:
 
 ```ruby
