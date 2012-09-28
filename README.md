@@ -108,7 +108,7 @@ u.avatar.file.read
 ## Acknowledgments
 
 This code is largely based on [carrierwave-mongoid](https://github.com/jnicklas/carrierwave-mongoid)
-I wanted to thank (jnicklas)[https://github.com/jnicklas] for all the open source code and for the great (and extensible) architecture of CarrierWave.
+I wanted to thank [jnicklas](https://github.com/jnicklas) for all the open source code and for the great (and extensible) architecture of CarrierWave.
 
 ## Copyright
 
