@@ -15,7 +15,8 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "carrierwave-postgresql"
-  gem.homepage = "http://github.com/diogob/carrierwave-postgresql"
+  gem.homepage = "http://diogob.github.com/carrierwave-postgresql/"
+
   gem.license = "MIT"
   gem.summary = %Q{Use PostgreSQL large objects (AKA BLOBs) to store your files inside the database}
   gem.description = %Q{This gem adds to carrierwave a storage facility which will use the PostgreSQL's oid datatype to reference a large object residing in the databse. It supports up to 2GB files, though it's better suited for smaller ones. Makes life easier for fast prototyping and put all your data in the same place, allows one backup for all your data and file storage in heroku servers.}
