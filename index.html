@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Carrierwave-postgresql by diogob</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Carrierwave-postgresql</h1>
+        <p>Use PostgreSQL large objects (AKA BLOBs) to store your files inside the database</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/diogob/carrierwave-postgresql" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/diogob/carrierwave-postgresql/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/diogob/carrierwave-postgresql/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>carrierwave-postgresql</h1>
+
+<p>This gem adds to <a href="https://github.com/jnicklas/carrierwave/">CarrierWave</a> a storage facility which will use the PostgreSQL's oid datatype to reference a large object residing in the databse. It supports up to 2GB files, though it's better suited for smaller ones. Makes life easier for fast prototyping and put all your data in the same place, allows one backup for all your data and file storage in heroku servers.</p>
+
+<p>For more information on PostgreSQL Large Objects you can take a look at the <a href="http://www.postgresql.org/docs/9.2/static/largeobjects.html">oficial docs</a></p>
+
+<h2>Installation</h2>
+
+<p>Install the latest release:</p>
+
+<pre><code>gem install carrierwave-postgresql
+</code></pre>
+
+<p>Require it in your code:</p>
+
+<pre><code>require 'carrierwave/postgresql'
+</code></pre>
+
+<p>Or, in Rails you can add it to your Gemfile:</p>
+
+<pre><code>gem 'carrierwave-postgresql'
+</code></pre>
+
+<h2>Getting Started</h2>
+
+<p>First, this extension assumes 2 important things:</p>
+
+<ul>
+<li>You are using CarrierWave with ActiveRecord</li>
+<li>Your database is PostgreSQL</li>
+</ul><p>If you fill the above requirements then you can proceed to the wonderful land of database stored files!</p>
+
+<p>Start off by generating an uploader:</p>
+
+<pre><code>rails generate uploader Avatar
+</code></pre>
+
+<p>this should give you a file in:</p>
+
+<pre><code>app/uploaders/avatar_uploader.rb
+</code></pre>
+
+<p>You can configure Carrierwave to use PostgreSQL Large Objects instead of the filesystem.
+Just change your uploader storage to <code>:postgresql_lo</code> as in:</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">AvatarUploader</span> <span class="o">&lt;</span> <span class="no">CarrierWave</span><span class="o">::</span><span class="no">Uploader</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">storage</span> <span class="ss">:postgresql_lo</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Add an oid column to the model you want to mount the uploader on:</p>
+
+<div class="highlight"><pre><span class="n">add_column</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:avatar</span><span class="p">,</span> <span class="ss">:oid</span>
+</pre></div>
+
+<p><em>IMPORTANT:</em> The table contains only an oid, which is a number referencing the large object. The file content is stored in a separate table. This is nice because it does not genrate any problem with SELECT * statements and it gives us a nice file-like interface to the large object.</p>
+
+<p>Open your model file and mount the uploader:</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">mount_uploader</span> <span class="ss">:avatar</span><span class="p">,</span> <span class="no">AvatarUploader</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Now you can cache files by assigning them to the attribute, they will
+automatically be stored sinside the database using the Large Object facility when the record is saved.</p>
+
+<div class="highlight"><pre><span class="n">u</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+<span class="n">u</span><span class="o">.</span><span class="n">avatar</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:file</span><span class="o">]</span>
+<span class="n">u</span><span class="o">.</span><span class="n">avatar</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'somewhere'</span><span class="p">)</span>
+<span class="n">u</span><span class="o">.</span><span class="n">save!</span>
+<span class="n">u</span><span class="o">.</span><span class="n">avatar</span><span class="o">.</span><span class="n">url</span> <span class="c1"># =&gt; '/url/to/file.png'</span>
+<span class="n">u</span><span class="o">.</span><span class="n">avatar</span><span class="o">.</span><span class="n">current_path</span> <span class="c1"># =&gt; 'path/to/file.png'</span>
+<span class="n">u</span><span class="o">.</span><span class="n">avatar</span><span class="o">.</span><span class="n">identifier</span> <span class="c1"># =&gt; 'file.png'</span>
+</pre></div>
+
+<p>For more info on CarrierWave take a look at the main <a href="https://raw.github.com/jnicklas/carrierwave/">Carrierwave repository</a>.</p>
+
+<h2>How to stream the files from the web server</h2>
+
+<p>Since carrierwave-postgresql doesn't make the files available via HTTP, you'll need to stream
+them yourself. In Rails for example, you could use the <code>send_data</code> method.</p>
+
+<p>The url that will be available from the field where you mounted the uploader will be the model name followed by the attribute name and with the oid as the resource id.</p>
+
+<p>For instance, in the user's avatar example the url for an image with 1 as it's oid would be <code>/user_avatar/1</code></p>
+
+<p>You can retrieve the file contents using the following code:</p>
+
+<div class="highlight"><pre><span class="n">u</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+<span class="n">u</span><span class="o">.</span><span class="n">avatar</span> <span class="o">=</span> <span class="n">params</span><span class="o">[</span><span class="ss">:file</span><span class="o">]</span>
+<span class="n">u</span><span class="o">.</span><span class="n">avatar</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'somewhere'</span><span class="p">)</span>
+<span class="n">u</span><span class="o">.</span><span class="n">save!</span>
+<span class="n">u</span><span class="o">.</span><span class="n">avatar</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span>
+</pre></div>
+
+<h2>Contributing to carrierwave-postgresql</h2>
+
+<ul>
+<li>Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.</li>
+<li>Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.</li>
+<li>Fork the project.</li>
+<li>Start a feature/bugfix branch.</li>
+<li>Commit and push until you are happy with your contribution.</li>
+<li>Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.</li>
+<li>Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.</li>
+</ul><h2>Acknowledgments</h2>
+
+<p>This code is largely based on <a href="https://github.com/jnicklas/carrierwave-mongoid">carrierwave-mongoid</a>
+I wanted to thank (jnicklas)[<a href="https://github.com/jnicklas">https://github.com/jnicklas</a>] for all the open source code and for the great (and extensible) architecture of CarrierWave.</p>
+
+<h2>Copyright</h2>
+
+<p>Copyright (c) 2012 Diogo Biazus. See LICENSE.txt for
+further details.</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/diogob">diogob</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
