@@ -79,7 +79,7 @@ For more info on CarrierWave take a look at the main [Carrierwave repository](ht
 ## How to stream the files from the web server
 
 Since carrierwave-postgresql doesn't make the files available via HTTP.
-You can do this using the Rails engine [postgresql_lo_streamer](https://github.com/diogob/postgresql_lo_streamer).
+You can do this using the Rails engine [postgresql_lo_streamer](http://diogob.github.com/postgresql_lo_streamer/).
 
 Alternatively (in case you are not using Rails) you con stream them yourself.
 
