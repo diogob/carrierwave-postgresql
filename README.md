@@ -78,8 +78,10 @@ For more info on CarrierWave take a look at the main [Carrierwave repository](ht
 
 ## How to stream the files from the web server
 
-Since carrierwave-postgresql doesn't make the files available via HTTP, you'll need to stream
-them yourself. In Rails for example, you could use the `send_data` method.
+Since carrierwave-postgresql doesn't make the files available via HTTP.
+You can do this using the Rails engine [postgresql_lo_streamer](https://github.com/diogob/postgresql_lo_streamer).
+
+Alternatively (in case you are not using Rails) you con stream them yourself.
 
 The url that will be available from the field where you mounted the uploader will be the model name followed by the attribute name and with the oid as the resource id.
 
