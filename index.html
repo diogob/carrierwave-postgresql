@@ -39,7 +39,8 @@
         <ul></ul>
       </nav>
       <section>
-        <h1>carrierwave-postgresql</h1>
+        <h1>carrierwave-postgresql <a href="http://travis-ci.org/diogob/carrierwave-postgresql"><img src="https://secure.travis-ci.org/diogob/carrierwave-postgresql.png" alt="Build Status"></a>
+</h1>
 
 <p>This gem adds to <a href="https://github.com/jnicklas/carrierwave/">CarrierWave</a> a storage facility which will use the PostgreSQL's oid datatype to reference a large object residing in the databse. It supports up to 2GB files, though it's better suited for smaller ones. Makes life easier for fast prototyping and put all your data in the same place, allows one backup for all your data and file storage in heroku servers.</p>
 
@@ -119,8 +120,10 @@ automatically be stored sinside the database using the Large Object facility whe
 
 <h2>How to stream the files from the web server</h2>
 
-<p>Since carrierwave-postgresql doesn't make the files available via HTTP, you'll need to stream
-them yourself. In Rails for example, you could use the <code>send_data</code> method.</p>
+<p>Since carrierwave-postgresql doesn't make the files available via HTTP.
+You can do this using the Rails engine <a href="https://github.com/diogob/postgresql_lo_streamer">postgresql_lo_streamer</a>.</p>
+
+<p>Alternatively (in case you are not using Rails) you con stream them yourself.</p>
 
 <p>The url that will be available from the field where you mounted the uploader will be the model name followed by the attribute name and with the oid as the resource id.</p>
 
