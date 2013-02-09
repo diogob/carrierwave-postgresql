@@ -44,13 +44,20 @@ class AvatarUploader < CarrierWave::Uploader::Base
 end
 ```
 
-Add an oid column to the model you want to mount the uploader on:
+Add an oid column to the (existing) model you want to mount the uploader on:
 
 ```ruby
 add_column :users, :avatar, :oid
 ```
 
 *IMPORTANT:* The table contains only an oid, which is a number referencing the large object. The file content is stored in a separate table. This is nice because it does not genrate any problem with SELECT * statements and it gives us a nice file-like interface to the large object.
+
+*NOTE:* If the model does not exist, and you are going to write a new model to store the oid's, the equivalent create_table migration is
+```ruby
+  def change
+    create_table :users do |t|
+      t.column :avatar, :oid, :null => false
+```
 
 Open your model file and mount the uploader:
 
