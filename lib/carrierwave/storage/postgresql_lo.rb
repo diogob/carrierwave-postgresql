@@ -55,6 +55,10 @@ module CarrierWave
           @oid ||= @uploader.identifier
         end
 
+        def original_filename
+          identifier.to_s
+        end
+
       end
 
       def store!(file)
