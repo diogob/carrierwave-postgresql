@@ -5,7 +5,7 @@ source "http://rubygems.org"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
-gem 'carrierwave', "~> 0.6.2"
+gem 'carrierwave'
 
 group :development do
   gem "activerecord", "~> 3.2.8"
