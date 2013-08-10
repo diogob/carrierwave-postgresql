@@ -48,7 +48,7 @@ module CarrierWave
         alias :size :file_length
 
         def connection
-          @connection ||= @uploader.model.connection.raw_connection
+          @connection ||= @uploader.model.class.connection.raw_connection
         end
 
         def identifier
@@ -78,7 +78,7 @@ module CarrierWave
       end
 
       def connection
-        @connection ||= uploader.model.connection.raw_connection
+        @connection ||= uploader.model.class.connection.raw_connection
       end
     end
   end
