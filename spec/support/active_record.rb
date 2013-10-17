@@ -16,3 +16,7 @@ end
 class Test < ActiveRecord::Base
 end
 
+module Namespace
+  class Test < ActiveRecord::Base
+  end
+end

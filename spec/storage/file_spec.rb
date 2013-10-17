@@ -16,6 +16,11 @@ describe CarrierWave::Storage::PostgresqlLo::File do
   describe "#url" do
     subject{ file.url }
     it{ should == "/test_file/0" }
+
+    context "on a namespaced model" do
+      let(:test_model){ Namespace::Test.new }
+      it{ should == "/namespace_test_file/0" }
+    end
   end
 
   describe "#write" do

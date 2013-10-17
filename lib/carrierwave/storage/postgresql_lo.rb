@@ -8,7 +8,7 @@ module CarrierWave
         end
 
         def url
-          "/#{@uploader.model.class.name.underscore}_#{@uploader.mounted_as.underscore}/#{identifier}"
+          "/#{@uploader.model.class.name.underscore.gsub('/', '_')}_#{@uploader.mounted_as.to_s.underscore}/#{identifier}"
         end
 
         def read
