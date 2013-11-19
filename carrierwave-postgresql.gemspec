@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "carrierwave-postgresql"
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Diogo Biazus"]
-  s.date = "2013-07-31"
+  s.date = "2013-11-19"
   s.description = "This gem adds to carrierwave a storage facility which will use the PostgreSQL's oid datatype to reference a large object residing in the databse. It supports up to 2GB files, though it's better suited for smaller ones. Makes life easier for fast prototyping and put all your data in the same place, allows one backup for all your data and file storage in heroku servers."
   s.email = "diogo@biazus.me"
   s.extra_rdoc_files = [
@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://diogob.github.com/carrierwave-postgresql/"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "2.0.0.rc.2"
+  s.rubygems_version = "2.0.7"
   s.summary = "Use PostgreSQL large objects (AKA BLOBs) to store your files inside the database"
 
   if s.respond_to? :specification_version then
