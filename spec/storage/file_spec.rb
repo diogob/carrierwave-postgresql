@@ -2,53 +2,46 @@ require 'spec_helper'
 
 describe CarrierWave::Storage::PostgresqlLo::File do
   let(:test_model){ Test.new }
-  let(:uploader){ double('an uploader', :model => test_model, :identifier => 0, :mounted_as => :file) }
+  let(:uploader){ double('an uploader', model: test_model, identifier: identifier, mounted_as: :file) }
   let(:file){ CarrierWave::Storage::PostgresqlLo::File.new(uploader) }
   let(:tempfile){ stub_tempfile('test.jpg', 'application/xml') }
+  let(:identifier){ Test.connection.raw_connection.lo_creat }
 
   describe "#delete" do
-    before do
-      file.connection.should_receive(:lo_unlink).with(0)
+    it("should delete the file using the lo interface") do
+      file.write(tempfile)
+      file.delete
+      expect(->{file.read}).to raise_error
     end
-    it("should delete the file using the lo interface"){ file.delete }
   end
 
   describe "#url" do
     subject{ file.url }
-    it{ should == "/test_file/0" }
+    it{ should == "/test_file/#{identifier}" }
 
     context "on a namespaced model" do
       let(:test_model){ Namespace::Test.new }
-      it{ should == "/namespace_test_file/0" }
+      it{ should == "/namespace_test_file/#{identifier}" }
     end
   end
 
   describe "#write" do
-    before do
-      file.connection.should_receive(:lo_open).with(0, ::PG::INV_WRITE).and_return(2)
-      file.connection.should_receive(:lo_close).with(2)
-      file.connection.should_receive(:lo_write).with(2, "this is stuff").and_return(42)
+    it("should write the file using the lo interface") do 
+      expect(file.write(tempfile)).to eq file.read.length
     end
-    it("should write the file using the lo interface"){ file.write(tempfile).should == 42 }
   end
 
   describe "#file_length" do
-    before do
-      file.connection.should_receive(:lo_open).with(0).and_return(1)
-      file.connection.should_receive(:lo_close).with(1)
-      file.connection.should_receive(:lo_lseek).with(1, 0, 2).and_return(42)
+    it("should return the file size") do
+      file.write(tempfile)
+      expect(file.file_length).to eq file.read.length
     end
-    it("should return the file size"){ file.file_length.should == 42 }
   end
 
   describe "#read" do
-    before do
-      file.connection.should_receive(:lo_open).with(0).and_return(1)
-      file.connection.should_receive(:lo_close).with(1)
-      file.should_receive(:file_length).and_return(42)
-      file.connection.should_receive(:lo_read).with(1, 42).and_return('file content')
+    it("should read the file using the lo interface") do
+      file.write(tempfile)
+      expect(file.read).to eq 'this is stuff'
     end
-
-    it("should read the file using the lo interface"){ file.read.should == 'file content' }
   end
 end

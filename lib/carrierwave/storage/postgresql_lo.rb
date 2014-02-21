@@ -23,6 +23,7 @@ module CarrierWave
         def write(file)
           @uploader.model.transaction do
             lo = connection.lo_open(identifier, ::PG::INV_WRITE)
+            connection.lo_truncate(lo, 0)
             size = connection.lo_write(lo, file.read)
             connection.lo_close(lo)
             size
