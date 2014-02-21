@@ -35,6 +35,7 @@ GEM
     minitest (4.7.5)
     multi_json (1.8.4)
     pg (0.17.1)
+    rake (10.1.1)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -55,4 +56,5 @@ DEPENDENCIES
   bundler
   carrierwave-postgresql!
   pg
+  rake
   rspec
