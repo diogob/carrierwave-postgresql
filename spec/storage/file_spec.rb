@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CarrierWave::Storage::PostgresqlLo::File do
   let(:test_model){ Test.new }
-  let(:uploader){ mock('an uploader', :model => test_model, :identifier => 0, :mounted_as => :file) }
+  let(:uploader){ double('an uploader', :model => test_model, :identifier => 0, :mounted_as => :file) }
   let(:file){ CarrierWave::Storage::PostgresqlLo::File.new(uploader) }
   let(:tempfile){ stub_tempfile('test.jpg', 'application/xml') }
 
