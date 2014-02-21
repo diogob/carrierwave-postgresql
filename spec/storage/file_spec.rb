@@ -5,6 +5,7 @@ describe CarrierWave::Storage::PostgresqlLo::File do
   let(:uploader){ double('an uploader', model: test_model, identifier: identifier, mounted_as: :file) }
   let(:file){ CarrierWave::Storage::PostgresqlLo::File.new(uploader) }
   let(:tempfile){ stub_tempfile('test.jpg', 'application/xml') }
+  let(:file_content){ 'this is stuff' }
   let(:identifier){ Test.connection.raw_connection.lo_creat }
 
   describe "#delete" do
@@ -27,21 +28,27 @@ describe CarrierWave::Storage::PostgresqlLo::File do
 
   describe "#write" do
     it("should write the file using the lo interface") do 
-      expect(file.write(tempfile)).to eq file.read.length
+      expect(file.write(tempfile)).to eq file_content.length
+    end
+
+    it("should change file size after a write is called twice on the same identifier") do
+      file.write(stub_tempfile('another_test.jpg', 'application/xml'))
+      file.write(tempfile)
+      expect(file.read).to eq file_content
     end
   end
 
   describe "#file_length" do
     it("should return the file size") do
       file.write(tempfile)
-      expect(file.file_length).to eq file.read.length
+      expect(file.file_length).to eq file_content.length
     end
   end
 
   describe "#read" do
     it("should read the file using the lo interface") do
       file.write(tempfile)
-      expect(file.read).to eq 'this is stuff'
+      expect(file.read).to eq file_content
     end
   end
 end
