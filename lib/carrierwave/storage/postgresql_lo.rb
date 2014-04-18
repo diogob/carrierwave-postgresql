@@ -53,7 +53,7 @@ module CarrierWave
         end
 
         def identifier
-          @oid ||= @uploader.identifier
+          @oid ||= @uploader.identifier.to_i
         end
 
         def original_filename
