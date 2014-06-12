@@ -2,7 +2,7 @@
 
 This gem adds to [CarrierWave](https://github.com/jnicklas/carrierwave/) a storage facility which will use the PostgreSQL's oid datatype to reference a large object residing in the databse. It supports up to 2GB files, though it's better suited for smaller ones. Makes life easier for fast prototyping and put all your data in the same place, allows one backup for all your data and file storage in heroku servers.
 
-For more information on PostgreSQL Large Objects you can take a look at the [oficial docs](http://www.postgresql.org/docs/9.2/static/largeobjects.html)
+For more information on PostgreSQL Large Objects you can take a look at the [official docs](http://www.postgresql.org/docs/9.2/static/largeobjects.html)
 
 ## Installation
 
