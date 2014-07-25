@@ -13,25 +13,27 @@ module CarrierWave
 
         def read
           @uploader.model.transaction do
-            lo = connection.lo_open(identifier)
-            content = connection.lo_read(lo, file_length)
-            connection.lo_close(lo)
-            content
+            lo = lo_manager.open(identifier)
+            bytes = lo.read(lo.size)
+            lo.close
+            bytes
           end
         end
 
         def write(file)
+          array_buf = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(file.path))
           @uploader.model.transaction do
-            lo = connection.lo_open(identifier, ::PG::INV_WRITE)
-            connection.lo_truncate(lo, 0)
-            size = connection.lo_write(lo, file.read)
-            connection.lo_close(lo)
+            lo = lo_manager.open(identifier, Java::OrgPostgresqlLargeobject::LargeObjectManager::WRITE)
+            lo.truncate(0)
+            lo.write(array_buf)
+            size = lo.size
+            lo.close
             size
           end
         end
 
         def delete
-          connection.lo_unlink(identifier)
+          lo_manager.unlink(identifier)
         end
 
         def content_type
@@ -39,9 +41,9 @@ module CarrierWave
 
         def file_length
           @uploader.model.transaction do
-            lo = connection.lo_open(identifier)
-            size = connection.lo_lseek(lo, 0, 2)
-            connection.lo_close(lo)
+            lo = lo_manager.open(identifier)
+            size = lo.size
+            lo.close
             size
           end
         end
@@ -50,6 +52,10 @@ module CarrierWave
 
         def connection
           @connection ||= @uploader.model.class.connection.raw_connection
+        end
+
+        def lo_manager
+          @lo_manager ||= connection.connection.getLargeObjectAPI
         end
 
         def identifier
@@ -75,11 +81,15 @@ module CarrierWave
       end
 
       def identifier
-        @oid ||= uploader.model.read_attribute(uploader.mounted_as) || connection.lo_creat
+        @oid ||= uploader.model.read_attribute(uploader.mounted_as) || lo_manager.createLO
       end
 
       def connection
         @connection ||= uploader.model.class.connection.raw_connection
+      end
+
+      def lo_manager
+        @lo_manager ||= connection.connection.getLargeObjectAPI
       end
     end
   end
