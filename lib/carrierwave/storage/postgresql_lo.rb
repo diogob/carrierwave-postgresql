@@ -13,10 +13,9 @@ module CarrierWave
 
         def read
           @uploader.model.transaction do
-            lo = lo_manager.open(identifier.to_java.long_value)
+            lo = lo_manager.java_send :open, [Java::long], identifier
             bytes = lo.read(lo.size)
             lo.close
-            #Could also bytes.to_s... but lets be clear here.
             String.from_java_bytes(bytes)
           end
         end
@@ -24,7 +23,7 @@ module CarrierWave
         def write(file)
           array_buf = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(file.path))
           @uploader.model.transaction do
-            lo = lo_manager.open(identifier.to_java.long_value, Java::OrgPostgresqlLargeobject::LargeObjectManager::WRITE)
+            lo = lo_manager.java_send :open, [Java::long, Java::int], identifier, Java::OrgPostgresqlLargeobject::LargeObjectManager::WRITE
             lo.truncate(0)
             lo.write(array_buf)
             size = lo.size
@@ -34,7 +33,7 @@ module CarrierWave
         end
 
         def delete
-          lo_manager.unlink(identifier.to_java.long_value)
+          lo_manager.java_send :unlink, [Java::long], identifier
         end
 
         def content_type
@@ -42,7 +41,7 @@ module CarrierWave
 
         def file_length
           @uploader.model.transaction do
-            lo = lo_manager.open(identifier.to_java.long_value)
+            lo = lo_manager.java_send :open, [Java::long], identifier
             size = lo.size
             lo.close
             size
