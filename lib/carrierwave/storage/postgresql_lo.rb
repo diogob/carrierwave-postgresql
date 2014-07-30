@@ -24,7 +24,7 @@ module CarrierWave
         def write(file)
           array_buf = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(file.path))
           @uploader.model.transaction do
-            lo = lo_manager.open(identifier, Java::OrgPostgresqlLargeobject::LargeObjectManager::WRITE)
+            lo = lo_manager.open(identifier.to_java.long_value, Java::OrgPostgresqlLargeobject::LargeObjectManager::WRITE)
             lo.truncate(0)
             lo.write(array_buf)
             size = lo.size
@@ -34,7 +34,7 @@ module CarrierWave
         end
 
         def delete
-          lo_manager.unlink(identifier)
+          lo_manager.unlink(identifier.to_java.long_value)
         end
 
         def content_type
@@ -42,7 +42,7 @@ module CarrierWave
 
         def file_length
           @uploader.model.transaction do
-            lo = lo_manager.open(identifier)
+            lo = lo_manager.open(identifier.to_java.long_value)
             size = lo.size
             lo.close
             size
