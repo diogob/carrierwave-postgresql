@@ -13,10 +13,11 @@ module CarrierWave
 
         def read
           @uploader.model.transaction do
-            lo = lo_manager.open(identifier.to_i)
+            lo = lo_manager.open(identifier.to_java.long_value)
             bytes = lo.read(lo.size)
             lo.close
-            String.from_java_bytes(bytes) #Could also bytes.to_s... but lets be clear here.
+            #Could also bytes.to_s... but lets be clear here.
+            String.from_java_bytes(bytes)
           end
         end
 
