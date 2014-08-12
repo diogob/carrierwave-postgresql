@@ -5,8 +5,8 @@ RSpec.configure do |config|
     ActiveRecord::Base.establish_connection(
       :adapter  => 'postgresql',
       :database => 'carrierwave_test',
-      :username => 'chris',
-      :password => '',
+      :username => 'postgres',
+      :password => 'password',
       :host     => 'localhost')
     ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS tests;"
     ActiveRecord::Base.connection.execute "CREATE TABLE tests (file oid);"
