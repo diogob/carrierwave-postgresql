@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 require 'carrierwave'
+require 'carrierwave/storage/adapters/jdbc_connection'
+require 'carrierwave/storage/adapters/pg_connection'
 require 'carrierwave/storage/postgresql_lo'
 
 module CarrierWave

@@ -3,59 +3,27 @@ module CarrierWave
   module Storage
     class PostgresqlLo < Abstract
       class File
+        if defined?(JRUBY_VERSION)
+          include CarrierWave::Storage::Adapters::JDBCConnection
+        else
+          include CarrierWave::Storage::Adapters::PGConnection
+        end
+
         def initialize(uploader)
           @uploader = uploader
         end
 
         def url
-          "/uploads/#{identifier}"
-        end
-
-        def read
-          @uploader.model.transaction do
-            lo = lo_manager.java_send :open, [Java::long], identifier
-            bytes = lo.read(lo.size)
-            lo.close
-            String.from_java_bytes(bytes)
-          end
-        end
-
-        def write(file)
-          array_buf = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(file.path))
-          @uploader.model.transaction do
-            lo = lo_manager.java_send :open, [Java::long, Java::int], identifier, Java::OrgPostgresqlLargeobject::LargeObjectManager::WRITE
-            lo.truncate(0)
-            lo.write(array_buf)
-            size = lo.size
-            lo.close
-            size
-          end
-        end
-
-        def delete
-          lo_manager.java_send :unlink, [Java::long], identifier
+          "/#{@uploader.model.class.name.underscore.gsub('/', '_')}_#{@uploader.mounted_as.to_s.underscore}/#{identifier}"
         end
 
         def content_type
-        end
-
-        def file_length
-          @uploader.model.transaction do
-            lo = lo_manager.java_send :open, [Java::long], identifier
-            size = lo.size
-            lo.close
-            size
-          end
         end
 
         alias :size :file_length
 
         def connection
           @connection ||= @uploader.model.class.connection.raw_connection
-        end
-
-        def lo_manager
-          @lo_manager ||= connection.connection.getLargeObjectAPI
         end
 
         def identifier
@@ -81,15 +49,20 @@ module CarrierWave
       end
 
       def identifier
-        @oid ||= uploader.model.read_attribute(uploader.mounted_as) || lo_manager.createLO
+        @oid ||= uploader.model.read_attribute(uploader.mounted_as) || create_large_object
       end
 
       def connection
         @connection ||= uploader.model.class.connection.raw_connection
       end
 
-      def lo_manager
-        @lo_manager ||= connection.connection.getLargeObjectAPI
+      private
+      def create_large_object
+        if defined?(JRUBY_VERSION)
+          connection.connection.getLargeObjectAPI.createLO
+        else
+          connection.lo_creat
+        end
       end
     end
   end
