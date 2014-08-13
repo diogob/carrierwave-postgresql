@@ -4,7 +4,7 @@ module CarrierWave
     module Adapters
       module JDBCConnection
         def read
-          ActiveRecord::Base.transaction do
+          ::ActiveRecord::Base.transaction do
             lo = lo_manager.java_send :open, [Java::long], identifier
             bytes = lo.read(lo.size)
             lo.close
@@ -14,7 +14,7 @@ module CarrierWave
 
         def write(file)
           array_buf = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(file.path))
-          ActiveRecord::Base.transaction do
+          ::ActiveRecord::Base.transaction do
             lo = lo_manager.java_send :open, [Java::long, Java::int], identifier, Java::OrgPostgresqlLargeobject::LargeObjectManager::WRITE
             lo.truncate(0)
             lo.write(array_buf)
@@ -29,7 +29,7 @@ module CarrierWave
         end
 
         def file_length
-          ActiveRecord::Base.transaction do
+          ::ActiveRecord::Base.transaction do
             lo = lo_manager.java_send :open, [Java::long], identifier
             size = lo.size
             lo.close
