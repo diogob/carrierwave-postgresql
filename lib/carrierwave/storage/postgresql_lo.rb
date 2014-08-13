@@ -3,6 +3,12 @@ module CarrierWave
   module Storage
     class PostgresqlLo < Abstract
       class File
+        if defined?(JRUBY_VERSION)
+          include CarrierWave::Storage::Adapters::JDBCConnection
+        else
+          include CarrierWave::Storage::Adapters::PGConnection
+        end
+
         def initialize(uploader)
           @uploader = uploader
         end
@@ -11,39 +17,7 @@ module CarrierWave
           "/#{@uploader.model.class.name.underscore.gsub('/', '_')}_#{@uploader.mounted_as.to_s.underscore}/#{identifier}"
         end
 
-        def read
-          @uploader.model.transaction do
-            lo = connection.lo_open(identifier)
-            content = connection.lo_read(lo, file_length)
-            connection.lo_close(lo)
-            content
-          end
-        end
-
-        def write(file)
-          @uploader.model.transaction do
-            lo = connection.lo_open(identifier, ::PG::INV_WRITE)
-            connection.lo_truncate(lo, 0)
-            size = connection.lo_write(lo, file.read)
-            connection.lo_close(lo)
-            size
-          end
-        end
-
-        def delete
-          connection.lo_unlink(identifier)
-        end
-
         def content_type
-        end
-
-        def file_length
-          @uploader.model.transaction do
-            lo = connection.lo_open(identifier)
-            size = connection.lo_lseek(lo, 0, 2)
-            connection.lo_close(lo)
-            size
-          end
         end
 
         alias :size :file_length
@@ -75,11 +49,20 @@ module CarrierWave
       end
 
       def identifier
-        @oid ||= uploader.model.read_attribute(uploader.mounted_as) || connection.lo_creat
+        @oid ||= uploader.model.read_attribute(uploader.mounted_as) || create_large_object
       end
 
       def connection
         @connection ||= uploader.model.class.connection.raw_connection
+      end
+
+      private
+      def create_large_object
+        if defined?(JRUBY_VERSION)
+          connection.connection.getLargeObjectAPI.createLO
+        else
+          connection.lo_creat
+        end
       end
     end
   end

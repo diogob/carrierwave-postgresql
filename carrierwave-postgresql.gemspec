@@ -16,7 +16,11 @@ Gem::Specification.new do |s|
   s.add_dependency "carrierwave"
 
   s.add_development_dependency "activerecord", "~> 4.0.1"
-  s.add_development_dependency "pg"
+  if defined?(JRUBY_VERSION)
+    s.add_development_dependency "activerecord-jdbcpostgresql-adapter"
+  else
+    s.add_development_dependency "pg"
+  end
   s.add_development_dependency "rspec"
   s.add_development_dependency "bundler"
   s.add_development_dependency "rake"
