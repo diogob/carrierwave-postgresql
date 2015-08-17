@@ -31,7 +31,7 @@ describe CarrierWave::Storage::PostgresqlLo do
     end
 
     context "when we have it mounted" do
-      let(:uploader){ double('an uploader', :model => test_model, :mounted_as => :file) }
+      let(:uploader){ double('an uploader', :model => test_model) }
       let(:lo){ storage.store!(file) }
       before do
         uploader.stub(:identifier) do

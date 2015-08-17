@@ -27,7 +27,7 @@ describe CarrierWave::Storage::PostgresqlLo::File do
   end
 
   describe "#write" do
-    it("should write the file using the lo interface") do 
+    it("should write the file using the lo interface") do
       expect(file.write(tempfile)).to eq file_content.length
     end
 

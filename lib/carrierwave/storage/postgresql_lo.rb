@@ -71,11 +71,12 @@ module CarrierWave
 
       def retrieve!(identifier)
         raise "This uploader must be mounted in an ActiveRecord model to work" unless uploader.model
+        @oid = identifier
         CarrierWave::Storage::PostgresqlLo::File.new(uploader)
       end
 
       def identifier
-        @oid ||= uploader.model.read_attribute(uploader.mounted_as) || connection.lo_creat
+        @oid ||= connection.lo_creat
       end
 
       def connection
