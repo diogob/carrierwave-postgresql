@@ -42,4 +42,10 @@ describe CarrierWave::Storage::PostgresqlLo do
       its(:read){ should == "this is stuff" }
     end
   end
+
+  it "test with mounted as" do
+    test = Test.create!(my_file: file)
+    expect(Test.find(test.id).my_file.read).to eq "this is stuff"
+    test.destroy
+  end
 end
