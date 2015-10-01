@@ -31,7 +31,7 @@ describe CarrierWave::Storage::PostgresqlLo do
     end
 
     context "when we have it mounted" do
-      let(:uploader){ double('an uploader', :model => test_model, :mounted_as => :file) }
+      let(:uploader){ double('an uploader', :model => test_model) }
       let(:lo){ storage.store!(file) }
       before do
         uploader.stub(:identifier) do
@@ -41,5 +41,11 @@ describe CarrierWave::Storage::PostgresqlLo do
       subject{ lo }
       its(:read){ should == "this is stuff" }
     end
+  end
+
+  it "test with mounted as" do
+    test = Test.create!(my_file: file)
+    expect(Test.find(test.id).my_file.read).to eq "this is stuff"
+    test.destroy
   end
 end
