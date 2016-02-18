@@ -68,6 +68,7 @@ DEPENDENCIES
   activerecord-jdbcpostgresql-adapter
   bundler
   carrierwave-postgresql!
+  pg
   rake
   rspec
 
