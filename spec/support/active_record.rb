@@ -8,12 +8,21 @@ RSpec.configure do |config|
       :username => 'postgres',
       :password => 'password',
       :host     => 'localhost')
-    ActiveRecord::Base.connection.execute "DROP TABLE IF EXISTS tests;"
-    ActiveRecord::Base.connection.execute "CREATE TABLE tests (file oid);"
+    ActiveRecord::Base.connection.create_table :tests, force: true do |t|
+      t.column :file, :oid
+    end
   end
+end
+require 'carrierwave'
+require 'carrierwave/orm/activerecord'
+
+class LoUploader < CarrierWave::Uploader::Base
+  storage :postgresql_lo
 end
 
 class Test < ActiveRecord::Base
+  include CarrierWave::ActiveRecord
+  mount_uploader :my_file, LoUploader, mount_on: :file
 end
 
 module Namespace
