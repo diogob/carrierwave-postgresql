@@ -50,7 +50,7 @@ module CarrierWave
       end
 
       def identifier
-        @oid ||= connection.lo_creat
+        @oid ||= create_large_object
       end
 
       def connection

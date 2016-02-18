@@ -40,7 +40,9 @@ describe CarrierWave::Storage::PostgresqlLo::File do
 
   describe "#write" do
     it("should write the file using the lo interface") do
-      expect(file.write(tempfile)).to eq file_content.length
+      ActiveRecord::Base.transaction {
+        expect(file.write(tempfile)).to eq file_content.length
+      }
     end
 
     it("should change file size after a write is called twice on the same identifier") do

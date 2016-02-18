@@ -3,6 +3,10 @@ module CarrierWave
   module Storage
     module Adapters
       module PGConnection
+        def identifier
+          @oid ||= connection.lo_creat
+        end
+        
         def read
           @uploader.model.transaction do
             lo = connection.lo_open(identifier)
