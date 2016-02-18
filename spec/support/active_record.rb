@@ -5,8 +5,8 @@ RSpec.configure do |config|
     ActiveRecord::Base.establish_connection(
       :adapter  => 'postgresql',
       :database => 'carrierwave_test',
-      :username => 'chris',
-      :password => '',
+      :username => 'postgres',
+      :password => 'password',
       :host     => 'localhost')
     ActiveRecord::Base.connection.create_table :tests, force: true do |t|
       t.column :file, :oid
