@@ -2,7 +2,6 @@ language: ruby
 services: postgresql
 rvm:
   - "2.3.0"
-  - "jruby-1.7.24"
   - "jruby-9.0.5.0"
 before_script:
   - psql -c 'create database carrierwave_test;' -U postgres
