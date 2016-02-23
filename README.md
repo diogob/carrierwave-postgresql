@@ -4,6 +4,11 @@ This gem adds to [CarrierWave](https://github.com/jnicklas/carrierwave/) a stora
 
 For more information on PostgreSQL Large Objects you can take a look at the [official docs](http://www.postgresql.org/docs/9.2/static/largeobjects.html)
 
+## Note about 0.2.0
+
+This version drops support for ruby 1.9. If you use this version you should stick to 0.1.5.
+The new adition to 0.2.0 is support to JRuby thanks to [@TheKidCoder](https://github.com/TheKidCoder).
+
 ## Installation
 
 Install the latest release:

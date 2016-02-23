@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "carrierwave-postgresql"
-  s.version     = "0.1.5"
+  s.version     = "0.2.0"
   s.date        = "2013-11-19"
   s.authors     = ["Diogo Biazus"]
   s.email       = ["diogo@biazus.me"]
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{lib}/**/*"] + ["LICENSE.txt", "Rakefile", "README.md"]
 
-  s.add_dependency "carrierwave"
+  s.add_dependency "carrierwave", "~> 0.10.0"
 
   s.add_development_dependency "activerecord", "~> 4.0.1"
   s.add_development_dependency "rspec", "~> 2.9"
