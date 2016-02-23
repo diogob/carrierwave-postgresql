@@ -8,6 +8,8 @@ For more information on PostgreSQL Large Objects you can take a look at the [off
 
 This version drops support for ruby 1.9. If you use this version you should stick to 0.1.5.
 The new adition to 0.2.0 is support to JRuby thanks to [@TheKidCoder](https://github.com/TheKidCoder).
+Due to the JRuby support the gem pg is no longer a dependency in our gemspec.
+This means that **you need either pg or activerecord-jdbcpostgresql-adapter** as a dependency of your project.
 
 ## Installation
 
