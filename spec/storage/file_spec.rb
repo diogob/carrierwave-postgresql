@@ -20,7 +20,7 @@ describe CarrierWave::Storage::PostgresqlLo::File do
         file.write(tempfile)
         file.delete
       }
-      expect(->{file.read}).to raise_error
+      expect { file.read }.to raise_error(PG::Error)
     end
   end
 
