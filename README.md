@@ -1,4 +1,4 @@
-# carrierwave-postgresql [![Build Status](https://secure.travis-ci.org/diogob/carrierwave-postgresql.svg)](http://travis-ci.org/diogob/carrierwave-postgresql)[![Code Climate](https://codeclimate.com/github/diogob/carrierwave-postgresql.svg)](https://codeclimate.com/github/diogob/carrierwave-postgresql)
+# carrierwave-postgresql [![Build Status](https://secure.travis-ci.org/diogob/carrierwave-postgresql.svg)](http://travis-ci.org/diogob/carrierwave-postgresql)[![Code Climate](https://codeclimate.com/github/diogob/carrierwave-postgresql.svg)](https://codeclimate.com/github/diogob/carrierwave-postgresql)[![codebeat](https://codebeat.co/badges/4ae749b1-d944-4b7e-892b-a60afe706446)](https://codebeat.co/projects/github-com-diogob-carrierwave-postgresql)
 
 This gem adds to [CarrierWave](https://github.com/jnicklas/carrierwave/) a storage facility which will use the PostgreSQL's oid datatype to reference a large object residing in the databse. It supports up to 2GB files, though it's better suited for smaller ones. Makes life easier for fast prototyping and put all your data in the same place, allows one backup for all your data and file storage in heroku servers.
 
