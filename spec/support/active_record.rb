@@ -29,3 +29,10 @@ module Namespace
   class Test < ActiveRecord::Base
   end
 end
+
+
+class Arel::Visitors::ToSql
+  def visit_Integer(value, a)
+    quoted(value.to_s, a)
+  end
+end

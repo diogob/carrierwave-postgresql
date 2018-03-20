@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     carrierwave-postgresql (0.2.0)
-      carrierwave (~> 0.10.0)
+      carrierwave (>= 0.10.0)
 
 GEM
   remote: http://rubygems.org/
@@ -29,21 +29,31 @@ GEM
       tzinfo (~> 0.3.37)
     arel (4.0.2)
     builder (3.1.4)
-    carrierwave (0.10.0)
-      activemodel (>= 3.2.0)
-      activesupport (>= 3.2.0)
-      json (>= 1.7)
+    carrierwave (1.1.0)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
       mime-types (>= 1.16)
+    coderay (1.1.1)
     diff-lcs (1.2.5)
+    ffi (1.9.18-java)
     i18n (0.7.0)
     jdbc-postgres (9.4.1206)
-    json (2.0.2)
+    method_source (0.8.2)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
     minitest (4.7.5)
     multi_json (1.12.1)
     pg (0.18.4)
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    pry (0.10.4-java)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+      spoon (~> 0.0)
     rake (11.2.2)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
@@ -61,6 +71,9 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
+    slop (3.6.0)
+    spoon (0.0.6)
+      ffi
     thread_safe (0.3.5)
     thread_safe (0.3.5-java)
     tzinfo (0.3.51)
@@ -70,14 +83,15 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (~> 4.0.1)
+  activerecord (>= 4.0.1)
   activerecord-jdbcpostgresql-adapter
   bundler
   carrierwave-postgresql!
   pg
+  pry
   rake
   rspec
   rspec-its
 
 BUNDLED WITH
-   1.12.5
+   1.14.6
