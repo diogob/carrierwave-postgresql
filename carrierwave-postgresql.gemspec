@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{lib}/**/*"] + ["LICENSE.txt", "Rakefile", "README.md"]
 
-  s.add_dependency "carrierwave", ">= 0.10.0"
+  s.add_dependency "carrierwave", ">= 0.10.0", "< 2.0"
 
   s.add_development_dependency "activerecord", ">= 4.0.1"
   s.add_development_dependency "rspec"
